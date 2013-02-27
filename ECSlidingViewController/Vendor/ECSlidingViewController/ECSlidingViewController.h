@@ -159,6 +159,8 @@ typedef enum {
  */
 @property (nonatomic, assign) ECResetStrategy resetStrategy;
 
+@property (nonatomic, assignx) id delegate;
+
 /** Returns a horizontal panning gesture for moving the top view.
  
  This is typically added to the top view or a top view's navigation bar.
@@ -222,4 +224,12 @@ typedef enum {
 @interface UIViewController(SlidingViewExtension)
 /** Convience method for getting access to the ECSlidingViewController instance */
 - (ECSlidingViewController *)slidingViewController;
+@end
+
+@protocol ECSlidingViewControllerDelegate <NSObject>
+
+- (void)slidingViewControllerDidPan;
+- (void)slidingViewControllerWillOpen;
+- (void)slidingViewControllerWillClose;
+
 @end
