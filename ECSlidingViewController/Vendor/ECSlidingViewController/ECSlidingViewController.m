@@ -305,8 +305,8 @@ NSString *const ECSlidingViewTopDidReset             = @"ECSlidingViewTopDidRese
 
 - (void)anchorTopViewTo:(ECSide)side animations:(void (^)())animations onComplete:(void (^)())complete
 {
-    if ([self.delegate respondsToSelector:@selector(slidingViewControllerWillOpen)]){
-        [self.delegate slidingViewControllerWillOpen];
+    if ([self.delegate respondsToSelector:@selector(slidingViewControllerWillOpenWithDuration:)]){
+        [self.delegate slidingViewControllerWillOpenWithDuration:kSlidingAnimationDuration];
     }
     
     CGFloat newCenter = self.topView.center.x;
@@ -319,7 +319,7 @@ NSString *const ECSlidingViewTopDidReset             = @"ECSlidingViewTopDidRese
     
     [self topViewHorizontalCenterWillChange:newCenter];
     
-    [UIView animateWithDuration:kSlidingAnimationDuration animations:^{
+    [UIView animateWithDuration:kSlidingAnimationDuration delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
         if (animations) {
             animations();
         }
@@ -344,9 +344,6 @@ NSString *const ECSlidingViewTopDidReset             = @"ECSlidingViewTopDidRese
 
 - (void)anchorTopViewTo:(ECSide)side withHorizontalVelocity:(CGFloat)velocity animations:(void (^)())animations onComplete:(void (^)())complete
 {
-    if ([self.delegate respondsToSelector:@selector(slidingViewControllerWillOpen)]){
-        [self.delegate slidingViewControllerWillOpen];
-    }
     
     CGFloat newCenter = self.topView.center.x;
     
@@ -364,7 +361,10 @@ NSString *const ECSlidingViewTopDidReset             = @"ECSlidingViewTopDidRese
         
     }
     
-    NSLog(@"duration: %f - speed %f - distance: %f", duration, velocity, deltaX);
+    if ([self.delegate respondsToSelector:@selector(slidingViewControllerWillOpenWithDuration:)]){
+        [self.delegate slidingViewControllerWillOpenWithDuration:duration];
+    }
+    
     [self topViewHorizontalCenterWillChange:newCenter];
     
     [UIView animateWithDuration:duration delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
@@ -407,7 +407,7 @@ NSString *const ECSlidingViewTopDidReset             = @"ECSlidingViewTopDidRese
     
     [self topViewHorizontalCenterWillChange:newCenter];
     
-    [UIView animateWithDuration:kSlidingAnimationDuration animations:^{
+    [UIView animateWithDuration:kSlidingAnimationDuration delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
         if (animations) {
             animations();
         }
@@ -435,13 +435,13 @@ NSString *const ECSlidingViewTopDidReset             = @"ECSlidingViewTopDidRese
 
 - (void)resetTopViewWithAnimations:(void(^)())animations onComplete:(void(^)())complete
 {
-    if ([self.delegate respondsToSelector:@selector(slidingViewControllerWillClose)]){
-        [self.delegate slidingViewControllerWillClose];
+    if ([self.delegate respondsToSelector:@selector(slidingViewControllerWillCloseWithDuration:)]){
+        [self.delegate slidingViewControllerWillCloseWithDuration:kSlidingAnimationDuration];
     }
     
     [self topViewHorizontalCenterWillChange:self.resettedCenter];
     
-    [UIView animateWithDuration:kSlidingAnimationDuration animations:^{
+    [UIView animateWithDuration:kSlidingAnimationDuration delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
         if (animations) {
             animations();
         }
@@ -456,10 +456,6 @@ NSString *const ECSlidingViewTopDidReset             = @"ECSlidingViewTopDidRese
 
 - (void)resetTopViewWithHorizontalVelocity:(CGFloat)velocity animations:(void(^)())animations onComplete:(void(^)())complete
 {
-    if ([self.delegate respondsToSelector:@selector(slidingViewControllerWillClose)]){
-        [self.delegate slidingViewControllerWillClose];
-    }
-    
     [self topViewHorizontalCenterWillChange:self.resettedCenter];
     
     CGFloat deltaX = abs(self.resettedCenter - self.topView.center.x);
@@ -468,7 +464,11 @@ NSString *const ECSlidingViewTopDidReset             = @"ECSlidingViewTopDidRese
         duration = kSlidingAnimationDuration;
     }
     
-    [UIView animateWithDuration:duration animations:^{
+    if ([self.delegate respondsToSelector:@selector(slidingViewControllerWillCloseWithDuration:)]){
+        [self.delegate slidingViewControllerWillCloseWithDuration:duration];
+    }
+    
+    [UIView animateWithDuration:duration delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
         if (animations) {
             animations();
         }
